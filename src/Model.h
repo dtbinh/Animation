@@ -1,17 +1,13 @@
-#ifndef HANS_MODEL_H
-#define HANS_MODEL_H
+#ifndef NEWELL_MODEL_H
+#define NEWELL_MODEL_H
 
-#ifdef __APPLE__
-#include <OpenGL/gl.h>
-#else
 #include <GL/gl.h>
-#endif
+
 
 class Model {
 public:
     Model();
     virtual ~Model();
-
     virtual void newInstance() = 0;
     virtual void draw();
     void setColor (float r,float g, float b) {

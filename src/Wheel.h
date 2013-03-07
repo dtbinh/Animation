@@ -1,5 +1,5 @@
-#ifndef HANS_WHEEL_H
-#define HANS_WHEEL_H
+#ifndef NEWELL_WHEEL_H
+#define NEWELL_WHEEL_H
 
 #include <GL/gl.h>
 #include "Model.h"

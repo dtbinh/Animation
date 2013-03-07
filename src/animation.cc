@@ -8,20 +8,20 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 #include "Arm.h"
-#include "Wheel.h"
 #include "Basketball.h"
+#include "Court.h"
 
 using namespace std;
 void displayCallback();
 
 int glut_win;
 
-Wheel *wheel;
 Arm* swingarm;
 Basketball* basketball;
-glm::mat4 wheel_cf;
-glm::mat4 swing_cf;
+Court* court;
 glm::mat4 basketball_cf;
+glm::mat4 swing_cf;
+glm::mat4 court_cf;
 const float INIT_SWING_ANGLE = 35.0f;
 const float GRAVITY = 9.8; 
 
@@ -51,14 +51,13 @@ void reshapeCallback (int w, int h){
 void idleCallback(){
 	static clock_t last_timestamp = 0;
 	static float swing_time = 0;
-	clock_t current;
+	clock_t current = clock();
 	double delta;
-	current = clock();
 	delta = 1000.0 * (current - last_timestamp)/CLOCKS_PER_SEC;
-	if (delta < 25) return;
-	wheel_cf = glm::rotate(wheel_cf, 20.0f, 0.0f, 1.0f, 0.0f);
+	if (delta < 75) { return; }
+	basketball_cf = glm::rotate(basketball_cf, 20.0f, 0.0f, 1.0f, 0.0f);
 	float angle = INIT_SWING_ANGLE * cos (swing_time * sqrt(swingarm->length()/GRAVITY) * M_PI / 180.0);
-	swing_time += 10;
+	swing_time += 7.5;
 	swing_cf = glm::rotate(angle, 0.0f, 1.0f, 0.0f);
 	last_timestamp = current;
 	glutSetWindow (glut_win);
@@ -86,32 +85,28 @@ void displayCallback (){
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLightfv (GL_LIGHT0, GL_POSITION, light0_pos);
 
+	glPushMatrix();
+	glTranslatef (0, -1, 0);
+	court->draw();
+	glPopMatrix();
 
 	glPushMatrix();
 	glTranslatef (0, 0, 10);
-	glPushMatrix();
 	glMultMatrixf(&swing_cf[0][0]);
-	glMultMatrixf(&wheel_cf[0][0]);
+	glMultMatrixf(&basketball_cf[0][0]);
 	basketball->draw();
 	glPopMatrix();
 
-	glPushMatrix();
-	glMultMatrixf(&swing_cf[0][0]);
-	swingarm->draw();
-	glPopMatrix();
-
-	glPopMatrix();
 	glutSwapBuffers ();
 }
 
 void myModelInit (){
 	basketball = new Basketball();
 	basketball->newInstance();
-	basketball->setColor(1.0, 1.0, 1.0);
-
-	wheel = new Wheel();
-	wheel->newInstance();
-	wheel_cf = glm::translate(wheel_cf, 0.0f, 0.0f, -swingarm->length());
+	basketball_cf = glm::translate(basketball_cf, 0.0f, 0.0f, -swingarm->length());
+	
+	court = new Court();
+	court->newInstance();
 
 	swingarm = new Arm;
 	swingarm->newInstance();
