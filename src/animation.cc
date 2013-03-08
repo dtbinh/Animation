@@ -114,6 +114,30 @@ void myModelInit (){
 	swing_cf = glm::rotate(swing_cf, INIT_SWING_ANGLE, 0.0f, 1.0f, 0.0f);
 }
 
+void keyHandler (unsigned char ch, int x, int y)
+{
+  //    cout << glutGetModifiers() << endl;
+  switch (ch)
+    {
+    case 0x1B: /* escape key */
+      exit (0);
+      break;
+    case '0':
+      if (glIsEnabled(GL_LIGHT0))
+	glDisable(GL_LIGHT0);
+      else
+	glEnable(GL_LIGHT0);
+      break;
+    case '1':
+      if (glIsEnabled(GL_LIGHT1))
+	glDisable(GL_LIGHT1);
+      else
+	glEnable(GL_LIGHT1);
+      break;
+    }
+
+}
+
 int main (int argc, char **argv){
 	glutInit (&argc, argv);
 	glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -123,6 +147,7 @@ int main (int argc, char **argv){
 	srand (time(0));
 	myGLInit ();
 	myModelInit ();
+	glutKeyboardFunc(keyHandler);
 	glutIdleFunc (idleCallback);
 	glutDisplayFunc (displayCallback);
 	glutReshapeFunc (reshapeCallback);
