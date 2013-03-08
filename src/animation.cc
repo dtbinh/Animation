@@ -40,7 +40,7 @@ void reshapeCallback (int w, int h){
 	gluPerspective (60, (float) w / (float) h, 5.0, 800.0);
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity ();
-	gluLookAt (50, 50, 25, 0, 0, 0, 0, 0, 1);
+	gluLookAt (0, 200, 75, 0, 0, 0, 0, 0, 1);
 	GLfloat mat[16];
 	glGetFloatv (GL_MODELVIEW_MATRIX, mat);
 }
