@@ -20,4 +20,9 @@ protected:
     GLint list_id;
     float r,g,b;
 };
+
+void DrawCircle(float cx, float cy, float r);
+
+void DrawArc(float cx, float cy, float r, float start_angle, float arc_angle, int num_segments);
+
 #endif

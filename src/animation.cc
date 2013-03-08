@@ -40,7 +40,7 @@ void reshapeCallback (int w, int h){
 	gluPerspective (60, (float) w / (float) h, 5.0, 800.0);
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity ();
-	gluLookAt (25, 20, 0, 0, 0, 0, 0, 0, 1);
+	gluLookAt (50, 50, 25, 0, 0, 0, 0, 0, 1);
 	GLfloat mat[16];
 	glGetFloatv (GL_MODELVIEW_MATRIX, mat);
 }
@@ -66,16 +66,16 @@ void idleCallback(){
 
 void myGLInit (){
 	glPolygonMode (GL_FRONT, GL_FILL);
-	glPolygonMode (GL_BACK, GL_LINE);
-	glEnable (GL_DEPTH_TEST);
-	glEnable (GL_CULL_FACE);
-	glCullFace (GL_BACK);
-	glEnable (GL_LIGHTING);
-	glEnable (GL_NORMALIZE);
+	glPolygonMode (GL_BACK, GL_FILL);
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_NORMALIZE);
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-	glEnable (GL_LIGHT0);
-	glEnable (GL_LIGHT1);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
 }
 
 /*--------------------------------*
@@ -86,7 +86,7 @@ void displayCallback (){
 	glLightfv (GL_LIGHT0, GL_POSITION, light0_pos);
 
 	glPushMatrix();
-	glTranslatef (0, -1, 0);
+	glTranslatef (0, 0, -10);
 	court->draw();
 	glPopMatrix();
 
@@ -101,12 +101,12 @@ void displayCallback (){
 }
 
 void myModelInit (){
+	court = new Court();
+	court->newInstance();
+
 	basketball = new Basketball();
 	basketball->newInstance();
 	basketball_cf = glm::translate(basketball_cf, 0.0f, 0.0f, -swingarm->length());
-	
-	court = new Court();
-	court->newInstance();
 
 	swingarm = new Arm;
 	swingarm->newInstance();
