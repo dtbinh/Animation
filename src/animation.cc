@@ -29,38 +29,40 @@ GLfloat whiteDiffuseLight[] = {1.0, 1.0, 1.0}; //set the diffuse light to white
 GLfloat blankMaterial[] = {0.0, 0.0, 0.0}; //set the diffuse light to white
 GLfloat mShininess[] = {128}; //set the shininess of the material
 
+const float INIT_SWING_ANGLE = 90.0f;
+const float GRAVITY = 9.8; 
 bool diffuse = false;
 bool emissive = true;
 bool specular = true;
 
-glm::mat4 basketball_cf;
-glm::mat4 swing_cf;
-glm::mat4 court_cf;
-const float INIT_SWING_ANGLE = 35.0f;
-const float GRAVITY = 9.8; 
+glm::mat4 basketball_cf, swing_cf, court_cf, light0_cf, light1_cf;
 
 GLfloat eye[] = {200, 150, 80};
 
-GLfloat light0_pos[] = {0, 5, 10};                    
+GLfloat light0_pos[] = {0, 5, 10};    
+GLfloat light1_pos[] = {0, 6, 10};  
 GLfloat light0_color[] = {1.0, 1.0, 1.0, 1.0};  
 
 /*--------------------------------*
  * GLUT Reshape callback function *
  *--------------------------------*/
 void light (void) {
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLightfv (GL_LIGHT0, GL_POSITION, light0_pos);
+	glLightfv (GL_LIGHT0, GL_POSITION, light1_pos);
 
-  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glLightfv (GL_LIGHT0, GL_POSITION, light0_pos);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, whiteSpecularLight);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, blackAmbientLight);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteDiffuseLight);
 
-  glLightfv(GL_LIGHT0, GL_SPECULAR, whiteSpecularLight);
-  glLightfv(GL_LIGHT0, GL_AMBIENT, blackAmbientLight);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteDiffuseLight);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, whiteSpecularLight);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, blackAmbientLight);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, whiteDiffuseLight);
 
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,whiteSpecularMaterial);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mShininess);
-
-
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,whiteSpecularMaterial);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mShininess);
 }
+
 void reshapeCallback (int w, int h){
 	glViewport (0, 0, w, h);
 	glMatrixMode (GL_PROJECTION);
@@ -110,8 +112,6 @@ void myGLInit (){
  * GLUT display callback function *
  *--------------------------------*/
 void displayCallback (){
-
-	
 	light();
 
 	glPushMatrix();
@@ -145,34 +145,49 @@ void myModelInit (){
 
 void keyHandler (unsigned char ch, int x, int y)
 {
-  //    cout << glutGetModifiers() << endl;
-  switch (ch)
-    {
-    case 0x1B: /* escape key */
-      exit (0);
-      break;
-    case '0':
-      if (glIsEnabled(GL_LIGHT0))
-	glDisable(GL_LIGHT0);
-      else
-	glEnable(GL_LIGHT0);
-      break;
-    case '1':
-      if (glIsEnabled(GL_LIGHT1))
-	glDisable(GL_LIGHT1);
-      else
-	glEnable(GL_LIGHT1);
-      break;
-    }
-
+	switch (ch){
+		case 0x1B: 
+			exit (0);
+			break;
+		case 'l':
+			if (glIsEnabled(GL_LIGHT0)){ glDisable(GL_LIGHT0); } else{ glEnable(GL_LIGHT0); }
+			break;
+		case 'L':
+			if (glIsEnabled(GL_LIGHT1)){ glDisable(GL_LIGHT1); } else{ glEnable(GL_LIGHT1); }
+			break;
+		case 'x':
+			break;
+		case 'X':
+			break;
+		case 'y':
+			break;
+		case 'Y':
+			break;
+		case 'z':
+			break;
+		case 'Z':
+			break;
+		case GLUT_KEY_UP:
+			basketball_cf = glm::translate(basketball_cf, 0.0f, 0.0f, 1.0f);
+			break;
+		case GLUT_KEY_DOWN:
+			basketball_cf = glm::translate(basketball_cf, 0.0f, 0.0f, 1.0f);
+			break;
+		case GLUT_KEY_LEFT:
+			basketball_cf = glm::translate(basketball_cf, 0.0f, 0.0f, 1.0f);
+			break;
+		case GLUT_KEY_RIGHT:
+			basketball_cf = glm::translate(basketball_cf, 0.0f, 0.0f, 1.0f);
+			break;
+	}
 }
 
 int main (int argc, char **argv){
 	glutInit (&argc, argv);
 	glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize (500, 500); 
+	glutInitWindowSize (600, 600); 
 	glutInitWindowPosition (0, 0); 
-	glut_win = glutCreateWindow ("CS367 Computer Graphics");
+	glut_win = glutCreateWindow ("Animation Project");
 	srand (time(0));
 	myGLInit ();
 	myModelInit ();

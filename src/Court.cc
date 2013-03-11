@@ -45,25 +45,6 @@ void Court::newInstance ()
 	glVertex3f(-50,0,0);
 	glEnd();
 
-
-
-
-
-	/*x = 50;
-	y = -75;
-	z = 0;
-	for(int rows = 0; rows < 10; rows++){
-		glPushMatrix();
-		glTranslatef(x,y,z);
-		for(int i = 0; i < 20; i++){
-			glTranslatef(-5,0,0);
-			glutSolidCube(5);
-		}
-		glPopMatrix();
-		z = z + 5;
-		y = y - 5;
-	}*/
-
 	x = -55;
 	y = -80;
 	z = 0;
@@ -93,44 +74,6 @@ void Court::newInstance ()
 		z = z + 5;
 		x = x + 5;
 	}
-
-
-
-
-	/*x = 50;
-	y = 75;
-	z = 0;
-	for(int rows = 0; rows < 10; rows++){
-		glPushMatrix();
-		glTranslatef(x,y,z);
-		for(int i = 0; i < 20; i++){
-			glTranslatef(-5,0,0);
-			glutSolidCube(5);
-		}
-		glPopMatrix();
-		z = z + 5;
-		y = y + 5;
-	}*/
-
-	/*DrawArc(0,75,35,0,180,3);
-	DrawArc(0,-75,35,0,-180,3);
-	glTranslatef (-50, 0, 0);
-	glColor3f(0.0,1.0,0.0);
-	glBegin(GL_QUADS);
-	glVertex3f(0,50,50);
-	glVertex3f(0,-50,50);
-	glVertex3f(0,-50,0);
-	glVertex3f(0,50,0);
-	glEnd();
-
-	glTranslatef (50,-50, 0);
-	glColor3f(0.0,0.0,1.0);
-	glBegin(GL_QUADS);
-	glVertex3f(50,0,50);
-	glVertex3f(50,0,0);
-	glVertex3f(-50,0,0);
-	glVertex3f(-50,0,50);
-	glEnd();*/
 
 	glColor3f(0,0,0);
 	//Draws The Center Circle
