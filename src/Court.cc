@@ -28,7 +28,7 @@ void Court::newInstance ()
 	glVertex3f(-50,-75,0);
 	glVertex3f(50,-75,0);
 	glEnd();
-	
+
 	glColor3f(1.0,1.0,1.0);
 	glBegin(GL_LINE_LOOP);
 	glVertex3f(50,75,0);
@@ -37,14 +37,8 @@ void Court::newInstance ()
 	glVertex3f(50,-75,0);
 	glEnd();
 
-	//glTranslatef (0, 0, 1);
-	glColor3f(0.4,0.2,0.0);
-	glBegin(GL_LINES);
-	glLineWidth(5);
-	glVertex3f(50,0,0);
-	glVertex3f(-50,0,0);
-	glEnd();
 
+	glColor3f(0.4,0.2,0.0);
 	x = -55;
 	y = -80;
 	z = 0;
@@ -85,6 +79,7 @@ void Court::newInstance ()
 	DrawCircle(0,-75,40);
 	DrawCircle(0,75,40);
 
+	//Draws the keys on the basketball court
 	glBegin(GL_QUADS);
 	glVertex3f(10,75,0);
 	glVertex3f(-10,75,0);
@@ -92,12 +87,21 @@ void Court::newInstance ()
 	glVertex3f(10,50,0);
 	glEnd();
 
+	//Draws the keys on the basketball cour
 	glBegin(GL_QUADS);
 	glVertex3f(10,-50,0);
 	glVertex3f(-10,-50,0);
 	glVertex3f(-10,-75,0);
 	glVertex3f(10,-75,0);
 	glEnd();
+
+	//Draw the half court line
+	glBegin(GL_LINES);
+	glLineWidth(5);
+	glVertex3f(50,0,0);
+	glVertex3f(-50,0,0);
+	glEnd();
+
 
 	glPopMatrix();
 	glEndList();

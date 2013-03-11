@@ -14,9 +14,9 @@
 using namespace std;
 void displayCallback();
 
-int glut_win;
+int glut_win, selected_light = 0;
 
-Arm* swingarm;
+Arm* height;
 Basketball* basketball;
 Court* court;
 
@@ -35,12 +35,12 @@ bool diffuse = false;
 bool emissive = true;
 bool specular = true;
 
-glm::mat4 basketball_cf, swing_cf, court_cf, light0_cf, light1_cf;
+glm::mat4 basketball_cf, height_cf, court_cf, light0_cf, light1_cf, camera_cf;
 
 GLfloat eye[] = {200, 150, 80};
 
-GLfloat light0_pos[] = {0, 5, 10};    
-GLfloat light1_pos[] = {0, 6, 10};  
+GLfloat light0_pos[] = {0, -5, 100};    
+GLfloat light1_pos[] = {0, 5, 100};  
 GLfloat light0_color[] = {1.0, 1.0, 1.0, 1.0};  
 
 /*--------------------------------*
@@ -77,21 +77,21 @@ void reshapeCallback (int w, int h){
 
 /*================================================================*
  * Idle Callback function. This is the main engine for simulation *
-tm *================================================================*/
+ *================================================================*/
 void idleCallback(){
-	static clock_t last_timestamp = 0;
+	/*static clock_t last_timestamp = 0;
 	static float swing_time = 0;
 	clock_t current = clock();
 	double delta;
 	delta = 1000.0 * (current - last_timestamp)/CLOCKS_PER_SEC;
 	if (delta < 75) { return; }
 	basketball_cf = glm::rotate(basketball_cf, 20.0f, 0.0f, 1.0f, 0.0f);
-	float angle = INIT_SWING_ANGLE * cos (swing_time * sqrt(swingarm->length()/GRAVITY) * M_PI / 180.0);
+	float angle = INIT_SWING_ANGLE * cos (swing_time * sqrt(height->length()/GRAVITY) * M_PI / 180.0);
 	swing_time += 7.5;
-	swing_cf = glm::rotate(angle, 0.0f, 1.0f, 0.0f);
+	height_cf = glm::rotate(angle, 0.0f, 1.0f, 0.0f);
 	last_timestamp = current;
 	glutSetWindow (glut_win);
-	glutPostRedisplay();
+	glutPostRedisplay();*/
 }
 
 void myGLInit (){
@@ -121,7 +121,7 @@ void displayCallback (){
 
 	glPushMatrix();
 	glTranslatef (0, 0, 10);
-	glMultMatrixf(&swing_cf[0][0]);
+	glMultMatrixf(&height_cf[0][0]);
 	glMultMatrixf(&basketball_cf[0][0]);
 	basketball->draw();
 	glPopMatrix();
@@ -135,63 +135,112 @@ void myModelInit (){
 
 	basketball = new Basketball();
 	basketball->newInstance();
-	basketball_cf = glm::translate(basketball_cf, 0.0f, 0.0f, -swingarm->length());
+	basketball_cf = glm::translate(basketball_cf, 0.0f, 0.0f, -height->length());
 
-	swingarm = new Arm;
-	swingarm->newInstance();
-	swingarm->setColor(1.0, 0.65, 0.342);
-	swing_cf = glm::rotate(swing_cf, INIT_SWING_ANGLE, 0.0f, 1.0f, 0.0f);
+	height = new Arm;
+	height->newInstance();
+	height->setColor(1.0, 0.65, 0.342);
+	height_cf = glm::rotate(height_cf, INIT_SWING_ANGLE, 0.0f, 1.0f, 0.0f);
 }
 
 void keyHandler (unsigned char ch, int x, int y)
 {
 	switch (ch){
-		case 0x1B: 
-			exit (0);
-			break;
-		case 'l':
-			if (glIsEnabled(GL_LIGHT0)){ glDisable(GL_LIGHT0); } else{ glEnable(GL_LIGHT0); }
-			break;
-		case 'L':
-			if (glIsEnabled(GL_LIGHT1)){ glDisable(GL_LIGHT1); } else{ glEnable(GL_LIGHT1); }
-			break;
-		case 'x':
-			break;
-		case 'X':
-			break;
-		case 'y':
-			break;
-		case 'Y':
-			break;
-		case 'z':
-			break;
-		case 'Z':
-			break;
+	case 0x1B: 
+		exit (0);
+		break;
+	case 'l':
+		if (glIsEnabled(GL_LIGHT0)){ glDisable(GL_LIGHT0); } else{ glEnable(GL_LIGHT0); }
+		break;
+	case 'L':
+		if (glIsEnabled(GL_LIGHT1)){ glDisable(GL_LIGHT1); } else{ glEnable(GL_LIGHT1); }
+		break;
+	case 'x':
+		basketball_cf = glm::translate(basketball_cf, 1.0f, 0.0f, 0.0f);
+		break;
+	case 'X':
+		basketball_cf = glm::translate(basketball_cf, -1.0f, 0.0f, .0f);
+		break;
+	case 'y':
+		basketball_cf = glm::translate(basketball_cf, 0.0f, 1.0f, 0.0f);
+		break;
+	case 'Y':
+		basketball_cf = glm::translate(basketball_cf, 0.0f, -1.0f, 0.0f);
+		break;
+	case 'z':
+		basketball_cf = glm::translate(basketball_cf, 0.0f, 0.0f, 1.0f);
+		break;
+	case 'Z':
+		basketball_cf = glm::translate(basketball_cf, 0.0f, 0.0f, -1.0f);
+		break;
+	case 'm':
+		glutIdleFunc (NULL);
+		break;
+	case 'M':
+		glutIdleFunc (idleCallback);
+		break;
+	}
+	glutPostRedisplay();
+}
+
+void fkeyHandler (int key, int x, int y)
+{
+	if (key == GLUT_KEY_F12)
+		exit(0);
+	int mod = glutGetModifiers();
+	if (mod == GLUT_ACTIVE_SHIFT) {
+		switch (key) {
 		case GLUT_KEY_UP:
-			basketball_cf = glm::translate(basketball_cf, 0.0f, 0.0f, 1.0f);
+			glutIdleFunc (NULL);
 			break;
 		case GLUT_KEY_DOWN:
-			basketball_cf = glm::translate(basketball_cf, 0.0f, 0.0f, 1.0f);
+			glutIdleFunc (idleCallback);
 			break;
 		case GLUT_KEY_LEFT:
-			basketball_cf = glm::translate(basketball_cf, 0.0f, 0.0f, 1.0f);
+			basketball_cf = glm::rotate(basketball_cf, +20.0f, 0.0f, 1.0f, 0.0f);
 			break;
 		case GLUT_KEY_RIGHT:
-			basketball_cf = glm::translate(basketball_cf, 0.0f, 0.0f, 1.0f);
+			basketball_cf = glm::rotate(basketball_cf, -20.0f, 0.0f, 1.0f, 0.0f);
 			break;
+		}
 	}
+	else {
+		switch (key) {
+		case GLUT_KEY_F1:
+			selected_light = 0;
+			break;
+		case GLUT_KEY_F2:
+			selected_light = 1;
+			break;
+		case GLUT_KEY_UP: 
+			basketball_cf = glm::translate(basketball_cf, 0.5f, 0.0f, 0.0f);
+			break;
+		case GLUT_KEY_DOWN: 
+			basketball_cf = glm::translate(basketball_cf, -0.5f, 0.0f, 0.0f);
+			break;
+		case GLUT_KEY_LEFT:  
+			basketball_cf = glm::rotate(basketball_cf, -20.0f, 1.0f, 0.0f, 0.0f);
+			break;
+		case GLUT_KEY_RIGHT: 
+			basketball_cf = glm::rotate(basketball_cf, +20.0f, 1.0f, 0.0f, 0.0f);
+			break;
+		}
+	}
+	glutPostRedisplay();
 }
+
 
 int main (int argc, char **argv){
 	glutInit (&argc, argv);
 	glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize (600, 600); 
-	glutInitWindowPosition (0, 0); 
+	glutInitWindowPosition (250, 250); 
 	glut_win = glutCreateWindow ("Animation Project");
 	srand (time(0));
 	myGLInit ();
 	myModelInit ();
 	glutKeyboardFunc(keyHandler);
+	glutSpecialFunc(fkeyHandler);
 	glutIdleFunc (idleCallback);
 	glutDisplayFunc (displayCallback);
 	glutReshapeFunc (reshapeCallback);
