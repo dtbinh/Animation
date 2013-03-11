@@ -4,9 +4,13 @@
 #include <math.h>
 #include <limits.h>
 #include <iostream>
+
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_access.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
+
 #include "Arm.h"
 #include "Basketball.h"
 #include "Court.h"
@@ -20,14 +24,14 @@ Arm* height;
 Basketball* basketball;
 Court* court;
 
-GLfloat redDiffuseMaterial[] = {1.0, 0.0, 0.0}; //set the material to red
-GLfloat whiteSpecularMaterial[] = {1.0, 1.0, 1.0}; //set the material to white
-GLfloat greenEmissiveMaterial[] = {0.0, 1.0, 0.0}; //set the material to green
-GLfloat whiteSpecularLight[] = {1.0, 1.0, 1.0}; //set the light specular to white
-GLfloat blackAmbientLight[] = {0.0, 0.0, 0.0}; //set the light ambient to black
-GLfloat whiteDiffuseLight[] = {1.0, 1.0, 1.0}; //set the diffuse light to white
-GLfloat blankMaterial[] = {0.0, 0.0, 0.0}; //set the diffuse light to white
-GLfloat mShininess[] = {128}; //set the shininess of the material
+GLfloat redDiffuseMaterial[] = {1.0, 0.0, 0.0,1.0}; //set the material to red
+GLfloat whiteSpecularMaterial[] = {1.0, 1.0, 1.0,1.0}; //set the material to white
+GLfloat greenEmissiveMaterial[] = {0.0, 1.0, 0.0,1.0}; //set the material to green
+GLfloat whiteSpecularLight[] = {1.0, 1.0, 1.0,1.0}; //set the light specular to white
+GLfloat blackAmbientLight[] = {0.0, 0.0, 0.0,1.0}; //set the light ambient to black
+GLfloat whiteDiffuseLight[] = {1.0, 1.0, 1.0,1.0}; //set the diffuse light to white
+GLfloat blankMaterial[] = {0.0, 0.0, 0.0,1.0}; //set the diffuse light to white
+
 
 const float INIT_SWING_ANGLE = 90.0f;
 const float GRAVITY = 9.8; 
@@ -35,21 +39,24 @@ bool diffuse = false;
 bool emissive = true;
 bool specular = true;
 
-glm::mat4 basketball_cf, height_cf, court_cf, light0_cf, light1_cf, camera_cf;
+glm::mat4 basketball_cf, height_cf, court_cf, light0_cf, light1_cf, camera_cf, spotlite_cf;
 
 GLfloat eye[] = {200, 150, 80};
 
-GLfloat light0_pos[] = {0, -5, 100};    
-GLfloat light1_pos[] = {0, 5, 100};  
+GLfloat light0_pos[] = {0, -5, 100,1.0};    
+GLfloat light1_pos[] = {0, 5, 100,1.0};  
 GLfloat light0_color[] = {1.0, 1.0, 1.0, 1.0};  
+
 
 /*--------------------------------*
  * GLUT Reshape callback function *
  *--------------------------------*/
 void light (void) {
-	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLightfv (GL_LIGHT0, GL_POSITION, light0_pos);
-	glLightfv (GL_LIGHT0, GL_POSITION, light1_pos);
+glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+glLightfv (GL_LIGHT0, GL_POSITION, light0_pos);
+
+glLightfv(GL_LIGHT1, GL_POSITION, glm::value_ptr(glm::column(spotlite_cf, 10)))
+glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, &glm::column(spotlite_cf, 2)[0]);
 
 	glLightfv(GL_LIGHT0, GL_SPECULAR, whiteSpecularLight);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, blackAmbientLight);
@@ -60,7 +67,7 @@ void light (void) {
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, whiteDiffuseLight);
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,whiteSpecularMaterial);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mShininess);
+	
 }
 
 void reshapeCallback (int w, int h){
