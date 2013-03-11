@@ -52,11 +52,11 @@ GLfloat light0_color[] = {1.0, 1.0, 1.0, 1.0};
  * GLUT Reshape callback function *
  *--------------------------------*/
 void light (void) {
-glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-glLightfv (GL_LIGHT0, GL_POSITION, light0_pos);
+  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glLightfv (GL_LIGHT0, GL_POSITION, light0_pos);
 
-glLightfv(GL_LIGHT1, GL_POSITION, glm::value_ptr(glm::column(spotlite_cf, 10)))
-glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, &glm::column(spotlite_cf, 2)[0]);
+  glLightfv(GL_LIGHT1, GL_POSITION, glm::value_ptr(glm::column(spotlite_cf, 3)));
+    glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, &glm::column(spotlite_cf, 2)[0]);
 
 	glLightfv(GL_LIGHT0, GL_SPECULAR, whiteSpecularLight);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, blackAmbientLight);
@@ -86,7 +86,7 @@ void reshapeCallback (int w, int h){
  * Idle Callback function. This is the main engine for simulation *
  *================================================================*/
 void idleCallback(){
-	/*static clock_t last_timestamp = 0;
+	static clock_t last_timestamp = 0;
 	static float swing_time = 0;
 	clock_t current = clock();
 	double delta;
@@ -98,7 +98,7 @@ void idleCallback(){
 	height_cf = glm::rotate(angle, 0.0f, 1.0f, 0.0f);
 	last_timestamp = current;
 	glutSetWindow (glut_win);
-	glutPostRedisplay();*/
+	glutPostRedisplay();
 }
 
 void myGLInit (){

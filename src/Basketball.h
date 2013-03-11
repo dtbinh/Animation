@@ -4,9 +4,13 @@
 #include <GL/gl.h>
 #include "Model.h"
 
+
+
 /* Basketball*/
 class Basketball : public Model {
 public:
+
+
 	Basketball();
 	~Basketball();
 	void newInstance();

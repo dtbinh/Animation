@@ -23,10 +23,15 @@ void Court::newInstance ()
 	glTranslatef (0, 0, -3);
 	glColor3f(1.0,1.0,0.4);
 	glBegin(GL_QUADS);
+	glNormal3f(0,0,1);
 	glVertex3f(50,75,0);
+	glNormal3f(0,0,1);
 	glVertex3f(-50,75,0);
+	glNormal3f(0,0,1);
 	glVertex3f(-50,-75,0);
+	glNormal3f(0,0,1);
 	glVertex3f(50,-75,0);
+
 	glEnd();
 
 	glColor3f(1.0,1.0,1.0);
